@@ -1,0 +1,77 @@
+esphome:
+  name: test
+  platform: ESP8266
+  board: d1_mini
+
+# Enable logging
+logger:
+
+ota:
+  password: "XXXX"
+
+wifi:
+  ssid: "SSID"
+  password: "XXXX"
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Fallback Hotspot"
+    password: "XXXX"
+
+captive_portal:
+
+uart:
+  rx_pin: D5
+  tx_pin: D6
+  baud_rate: 57600
+  
+fingerprint_grow:
+  sensing_pin: D3
+  on_finger_scan_matched:
+    - text_sensor.template.publish:
+        id: fingerprint_state
+        state: "Authorized finger"
+  on_finger_scan_unmatched:
+    - text_sensor.template.publish:
+        id: fingerprint_state
+        state: "Unauthorized finger"
+  on_enrollment_scan:
+    - text_sensor.template.publish:
+        id: fingerprint_state
+        state: "Finger scanned"
+  on_enrollment_done:
+    - text_sensor.template.publish:
+        id: fingerprint_state
+        state: "Enrolled fingerprint"
+  on_enrollment_failed:
+    - text_sensor.template.publish:
+        id: fingerprint_state
+        state: "Failed to enroll fingerprint"
+
+api:
+  services:
+  - service: enroll
+    variables:
+      finger_id: int
+      num_scans: int
+    then:
+      - fingerprint_grow.enroll:
+          finger_id: !lambda 'return finger_id;'
+          num_scans: !lambda 'return num_scans;'
+  - service: cancel_enroll
+    then:
+      - fingerprint_grow.cancel_enroll:
+  - service: delete
+    variables:
+      finger_id: int
+    then:
+      - fingerprint_grow.delete:
+          finger_id: !lambda 'return finger_id;'
+  - service: delete_all
+    then:
+      - fingerprint_grow.delete_all:
+
+text_sensor:
+  - platform: template
+    id: fingerprint_state
+    name: "Fingerprint State"  
