@@ -2,8 +2,8 @@
 I made a wiring scheme and used some example code for the basic setup of a R307 fingerprint sensor with ESPHome. 
 
 ## Components list
-* [D1 mini](https://www.aliexpress.com/item/1005001604805832.html)
-* [R307 fingerprint sensor](https://www.aliexpress.com/item/32958075966.html)
+* [D1 mini](https://s.click.aliexpress.com/e/_98eTUE)
+* [R307 fingerprint sensor](https://s.click.aliexpress.com/e/_AZPqbc)
 * or the R503 fingerprint sensor (I've not tested it yet)
 * Some wires
 
